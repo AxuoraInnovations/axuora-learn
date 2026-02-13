@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: rgb(4, 84, 255);
+  --primary-light: rgb(134, 185, 255);
+  --neutral-light: rgb(255, 255, 255);
+  --neutral-dark: rgb(0, 0, 0);
+  --font-archivo: "Archivo", system-ui, sans-serif;
+}
+
+body {
+  color: var(--neutral-dark);
+  background: var(--neutral-light);
+  font-family: var(--font-archivo);
+}

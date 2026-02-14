@@ -8,6 +8,16 @@ export const metadata: Metadata = {
   title: "Axuora Learn – Speed Up Your Exam Preparation",
   description:
     "Built by teens for teens. Generate AI predictive exam questions and use an advanced full-marks analyzer to prepare with confidence.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
+  openGraph: {
+    title: "Axuora Learn – Speed Up Your Exam Preparation",
+    description:
+      "Built by teens for teens. Generate AI predictive exam questions and use an advanced full-marks analyzer to prepare with confidence.",
+    images: ["/icon.png"],
+  },
 };
 
 export default function RootLayout({
@@ -18,6 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/icon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link

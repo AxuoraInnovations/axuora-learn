@@ -32,7 +32,7 @@ const plans = [
     description:
       "Best for serious students. Unlimited AI questions, weekly performance tracking, and all subjects.",
     price: 50,
-    yearlyPrice: 500,
+    yearlyPrice: 540,
     currency: "RM",
     buttonText: "Get started",
     buttonVariant: "default" as const,
@@ -119,7 +119,7 @@ const PricingSwitch = ({ onSwitch }: { onSwitch: (value: string) => void }) => {
           <span className="relative flex items-center gap-2">
             Yearly
             <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-black">
-              Save 20%
+              Save 10%
             </span>
           </span>
         </button>
@@ -168,12 +168,36 @@ export function PricingSection() {
       className="relative mx-auto min-h-0 bg-white px-4 pt-12 pb-20"
       ref={sectionRef}
     >
+      <div className="mb-6 max-w-3xl mx-auto text-center">
+        <motion.h2
+          className="text-3xl font-medium text-gray-900 mb-4 sm:text-4xl md:text-6xl"
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={fadeUp}
+          custom={0}
+        >
+          Plan that works best for your{" "}
+          <span className="inline-block rounded-xl border border-dashed border-blue-500 bg-blue-100 px-2 py-1 capitalize">
+            Exams
+          </span>
+        </motion.h2>
+        <motion.p
+          className="mx-auto text-sm text-gray-600 sm:text-base w-[80%] sm:w-[70%]"
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={fadeUp}
+          custom={1}
+        >
+          Choose the plan that fits your study goals. Explore which option is right for you.
+        </motion.p>
+      </div>
+
       <motion.div
         className="relative z-10"
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         variants={fadeUp}
-        custom={0}
+        custom={2}
       >
         <PricingSwitch onSwitch={togglePricingPeriod} />
       </motion.div>

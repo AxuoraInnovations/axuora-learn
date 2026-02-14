@@ -30,11 +30,19 @@ const faqs = [
   },
 ];
 
+const accordionTransition = { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] };
+
 export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="bg-neutral-light py-16 md:py-24">
+    <motion.section
+      className="bg-neutral-light py-16 md:py-24"
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.08 }}
+      transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
       <div className="max-w-content mx-auto px-5 md:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           <motion.div
@@ -42,7 +50,7 @@ export function FAQSection() {
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
             <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
               FAQ
@@ -62,39 +70,57 @@ export function FAQSection() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
             variants={{
-              visible: { transition: { staggerChildren: 0.06 } },
+              visible: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } },
               hidden: {},
             }}
           >
-            {faqs.map((faq, i) => (
-              <motion.div
-                key={faq.q}
-                variants={{
-                  hidden: { opacity: 0, y: 12 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
-                }}
-                className="border border-theme-10 rounded-xl overflow-hidden bg-white"
-              >
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between text-left px-6 py-4 font-medium text-neutral-dark hover:bg-theme-9/50 transition-colors"
-                  onClick={() => setOpenIndex(openIndex === i ? null : i)}
+            {faqs.map((faq, i) => {
+              const isOpen = openIndex === i;
+              return (
+                <motion.div
+                  key={faq.q}
+                  variants={{
+                    hidden: { opacity: 0, y: 12 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+                  }}
+                  className="border border-theme-10 rounded-xl overflow-hidden bg-white"
                 >
-                  {faq.q}
-                  <span className="text-theme-7 ml-2 shrink-0">
-                    {openIndex === i ? "−" : "+"}
-                  </span>
-                </button>
-                {openIndex === i && (
-                  <div className="px-6 pb-4 text-theme-7 text-sm leading-relaxed border-t border-theme-10 pt-2">
-                    {faq.a}
-                  </div>
-                )}
-              </motion.div>
-            ))}
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between text-left px-6 py-4 font-medium text-neutral-dark hover:bg-theme-9/50 transition-colors duration-200"
+                    onClick={() => setOpenIndex(isOpen ? null : i)}
+                  >
+                    <span className="pr-4">{faq.q}</span>
+                    <motion.span
+                      className="text-theme-7 shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-theme-9/60"
+                      animate={{ rotate: isOpen ? 45 : 0 }}
+                      transition={accordionTransition}
+                      aria-hidden
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-theme-7">
+                        <path d="M2 6h8M6 2v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      </svg>
+                    </motion.span>
+                  </button>
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      height: isOpen ? "auto" : 0,
+                      opacity: isOpen ? 1 : 0,
+                    }}
+                    transition={accordionTransition}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-6 pb-4 text-theme-7 text-sm leading-relaxed border-t border-theme-10 pt-2">
+                      {faq.a}
+                    </div>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

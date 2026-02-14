@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import NumberFlow from "@number-flow/react";
 import { BarChart3, BookOpen, CheckCheck, FileQuestion, Sparkles } from "lucide-react";
@@ -10,27 +11,28 @@ const plans = [
   {
     name: "Starter",
     description:
-      "Perfect for students getting started with exam prep. Try AI-generated questions and basic analytics.",
+      "Perfect for students getting started with exam prep. Try AI-generated questions and the Full Marks Analyzer.",
     price: 0,
     yearlyPrice: 0,
     buttonText: "Get started free",
     buttonVariant: "outline" as const,
     features: [
-      { text: "Up to 50 AI exam questions per month", icon: <FileQuestion size={20} /> },
+      { text: "Up to 50 AI predictive exam questions per month", icon: <FileQuestion size={20} /> },
       { text: "Up to 5 past papers uploads", icon: <BookOpen size={20} /> },
-      { text: "Basic full-marks breakdown", icon: <Sparkles size={20} /> },
+      { text: "Full Marks Analyzer & step-by-step breakdown", icon: <Sparkles size={20} /> },
     ],
     includes: [
       "Free includes:",
       "AI predictive exam questions",
       "Step-by-step answer breakdown",
+      "Flashcards & notes summary",
       "1 subject of your choice",
     ],
   },
   {
     name: "Pro",
     description:
-      "Best for serious students. Unlimited AI questions, weekly performance tracking, and all subjects.",
+      "Best for serious students. Unlimited predictive exams, AI Live Lessons, and all subjects.",
     price: 50,
     yearlyPrice: 540,
     currency: "RM",
@@ -38,13 +40,14 @@ const plans = [
     buttonVariant: "default" as const,
     popular: true,
     features: [
-      { text: "Unlimited AI exam questions", icon: <FileQuestion size={20} /> },
-      { text: "Unlimited past papers & storage", icon: <BookOpen size={20} /> },
-      { text: "Weekly performance tracker", icon: <BarChart3 size={20} /> },
+      { text: "3x usage — AI predictive exam questions", icon: <FileQuestion size={20} /> },
+      { text: "3x usage — past papers & storage", icon: <BookOpen size={20} /> },
+      { text: "AI Live Lessons & performance tracker", icon: <BarChart3 size={20} /> },
     ],
     includes: [
       "Everything in Starter, plus:",
       "All subjects supported",
+      "AI Live Lessons",
       "Monthly progress reports",
       "Priority support",
     ],
@@ -52,7 +55,7 @@ const plans = [
   {
     name: "Pro Plus",
     description:
-      "For students who want everything. Unlimited access, team features, and premium support.",
+      "For students who want everything. Unlimited access, study groups, and premium support.",
     comingSoon: true,
     price: null,
     yearlyPrice: null,
@@ -225,13 +228,6 @@ export function PricingSection() {
                   <h3 className="mb-2 text-3xl font-semibold text-gray-900">
                     {plan.name}
                   </h3>
-                  {plan.popular && (
-                    <div className="">
-                      <span className="rounded-full bg-blue-500 px-3 py-1 text-sm font-medium text-white">
-                        Popular
-                      </span>
-                    </div>
-                  )}
                 </div>
                 <p className="mb-4 text-sm text-gray-600">{plan.description}</p>
                 <div className="flex items-baseline">
@@ -261,8 +257,9 @@ export function PricingSection() {
               </CardHeader>
 
               <CardContent className="pt-0">
-                <button
-                  className={`mb-6 w-full rounded-xl p-4 text-xl ${
+                <Link
+                  href="/waitlist"
+                  className={`mb-6 block w-full rounded-xl p-4 text-xl text-center font-medium transition-opacity hover:opacity-90 ${
                     plan.popular
                       ? "border border-blue-400 from-blue-500 to-blue-600 bg-gradient-to-t text-white shadow-lg shadow-blue-500"
                       : plan.buttonVariant === "outline"
@@ -271,7 +268,7 @@ export function PricingSection() {
                   }`}
                 >
                   {plan.buttonText}
-                </button>
+                </Link>
                 <ul className="space-y-2 py-5 font-semibold">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center">

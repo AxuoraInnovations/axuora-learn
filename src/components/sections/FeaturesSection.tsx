@@ -39,15 +39,14 @@ const GradientCard = ({ icon, title, description, linkText }: CardData) => {
   };
 
   return (
+    <div className="rounded-[32px] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] md:shadow-[0_-10px_100px_10px_rgba(59,130,246,0.15),0_0_10px_0_rgba(0,0,0,0.05)] border border-white/60" style={{ width: "360px", height: "450px" }}>
     <motion.div
       ref={cardRef}
-      className="relative rounded-[32px] overflow-hidden"
+      className="relative w-full h-full rounded-[32px] overflow-hidden"
       style={{
-        width: "360px",
-        height: "450px",
         transformStyle: "preserve-3d",
         backgroundColor: "#ffffff",
-        boxShadow: "0 -10px 100px 10px rgba(59, 130, 246, 0.15), 0 0 10px 0 rgba(0, 0, 0, 0.05)",
+        borderRadius: "32px",
       }}
       initial={{ y: 0 }}
       animate={{
@@ -263,20 +262,24 @@ const GradientCard = ({ icon, title, description, linkText }: CardData) => {
             {description}
           </motion.p>
 
-          <motion.a
-            href="#"
+          <Link
+            href="/features"
             className="inline-flex items-center text-gray-900 text-sm font-medium group"
-            initial={{ filter: "blur(3px)", opacity: 0.7 }}
-            animate={{
-              filter: "blur(0px)",
-              opacity: 0.9,
-              transition: { duration: 1.2, delay: 0.6 }
-            }}
-            whileHover={{
-              filter: "drop-shadow(0 0 5px rgba(59, 130, 246, 0.3))"
-            }}
           >
-            {linkText}
+            <motion.span
+              className="inline-flex items-center"
+              initial={{ filter: "blur(3px)", opacity: 0.7 }}
+              animate={{
+                filter: "blur(0px)",
+                opacity: 0.9,
+                transition: { duration: 1.2, delay: 0.6 }
+              }}
+              whileHover={{
+                filter: "drop-shadow(0 0 5px rgba(59, 130, 246, 0.3))"
+              }}
+            >
+              {linkText}
+            </motion.span>
             <motion.svg
               className="ml-1 w-4 h-4"
               width="8"
@@ -300,10 +303,11 @@ const GradientCard = ({ icon, title, description, linkText }: CardData) => {
                 strokeLinejoin="round"
               />
             </motion.svg>
-          </motion.a>
+          </Link>
         </motion.div>
       </motion.div>
     </motion.div>
+    </div>
   );
 };
 
@@ -341,35 +345,75 @@ const cards: CardData[] = [
 
 export function FeaturesSection() {
   return (
-    <section className="bg-neutral-light py-16 md:py-24">
-      <div className="max-w-content mx-auto px-5 md:px-20">
+    <section className="relative overflow-hidden py-16 md:py-24">
+      {/* Background: white at top (blend with hero) → faded blue at bottom */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden
+        style={{
+          background:
+            "linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.99) 40%, rgba(4, 84, 255, 0.04) 85%, rgba(4, 84, 255, 0.08) 100%)",
+        }}
+      />
+
+      <motion.div
+        className="relative max-w-content mx-auto px-5 md:px-20"
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.12 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-primary font-medium text-sm tracking-wide mb-2">FEATURES</p>
-          <h2 className="text-3xl md:text-4xl lg:text-[48px] font-bold leading-[1.1] tracking-[-0.04em] mb-4">
-            Smarter Tools to
-            <br />
-            Accelerate Your Preparation
-          </h2>
-          <p className="text-theme-7 text-base md:text-lg leading-relaxed">
-            Explore features that create flow-state for you, with ease. Fumble is not in our
-            dictionary
-          </p>
+          <motion.p
+            className="text-primary font-medium text-sm tracking-wide mb-2"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            FEATURES
+          </motion.p>
+          <motion.h2
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-bold leading-[1.15] tracking-[-0.04em] mb-4 text-neutral-dark"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+          >
+            Smarter Tools to Accelerate Your Exam Prep with AxuoraLearn
+          </motion.h2>
+          <motion.p
+            className="text-neutral-dark text-base md:text-lg leading-relaxed"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.45, delay: 0.25 }}
+          >
+            AI-powered exam prep built by teens, for teens. Get full-marks breakdowns and
+            practice with confidence.
+          </motion.p>
         </div>
         <div className="flex flex-wrap gap-8 justify-center">
           {cards.map((card, index) => (
             <GradientCard key={index} {...card} />
           ))}
         </div>
-        <div className="text-center mt-12">
+        <motion.div
+          className="text-center mt-12"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
           <Link
             href="/features"
-            className="inline-flex items-center text-primary font-medium hover:underline"
+            className="inline-flex items-center text-white font-medium hover:underline"
           >
             Explore all features
             <span className="ml-1">→</span>
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

@@ -15,3 +15,67 @@ body {
   background: var(--neutral-light);
   font-family: var(--font-archivo);
 }
+
+/* Waitlist intro (avoids hydration mismatch from inline style content) */
+.waitlist-intro .intro-text {
+  background: linear-gradient(90deg, #000 0%, #000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.3s ease;
+}
+.waitlist-intro .intro-container:hover .intro-text {
+  background: linear-gradient(90deg, #000 0%, #334155 50%, #000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.waitlist-intro .intro-container {
+  position: relative;
+}
+.waitlist-intro .intro-container::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,0,0,0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 20px;
+}
+.waitlist-intro .intro-container:hover::before {
+  opacity: 1;
+}
+
+/* Waitlist form success / shimmer */
+@keyframes waitlist-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes waitlist-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.waitlist-form .animate-slide-up {
+  animation: waitlist-slideUp 0.6s ease-out forwards;
+}
+.waitlist-form .animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+  background-size: 200% 100%;
+  animation: waitlist-shimmer 2s infinite;
+}
+
+/* AnimatedGradientText gradient border animation */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient {
+  animation: gradient-shift 4s ease infinite;
+}

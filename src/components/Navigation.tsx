@@ -10,7 +10,7 @@ const navLinks = [
   { href: "/blogs", label: "Blog" },
   { href: "/integrations", label: "Integrations" },
   { href: "/career", label: "Career" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 export function Navigation() {

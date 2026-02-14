@@ -11,9 +11,25 @@ export function IntegrationsSection() {
         backgroundImage: "url(https://framerusercontent.com/images/Kk2qrfbXdplkIOTNSe41M9SuKI.svg)",
       }}
     >
+      <div className="max-w-content mx-auto px-5 md:px-10">
+        {/* Section label: pill + lines (home page only; this section is only on home) */}
+        <motion.div
+          className="flex items-center justify-center gap-4 mb-12"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.4 }}
+        >
+          <span className="h-px flex-1 max-w-20 bg-white/40" aria-hidden />
+          <span className="rounded-full bg-white/90 px-4 py-1.5 text-sm font-medium tracking-wide text-neutral-dark shadow-sm">
+            Quoted by, Teens
+          </span>
+          <span className="h-px flex-1 max-w-20 bg-white/40" aria-hidden />
+        </motion.div>
+      </div>
       <div className="max-w-content mx-auto px-5 md:px-10 text-center">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-neutral-dark mb-4"
+          className="font-script text-3xl md:text-4xl font-bold text-white mb-4"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -22,7 +38,7 @@ export function IntegrationsSection() {
           &quot;Time is Money, Use AxuoraLearn to Accelerate Your Learning.&quot;
         </motion.h2>
         <motion.p
-          className="text-white max-w-xl mx-auto mb-8"
+          className="font-script text-white max-w-xl mx-auto mb-8 text-xl md:text-2xl"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}

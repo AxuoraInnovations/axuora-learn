@@ -3,7 +3,6 @@ import { GeometricPattern } from "@/components/GeometricPattern";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PricingSection } from "@/components/sections/PricingSection";
-import { BenefitsSection } from "@/components/sections/BenefitsSection";
 import { IntegrationsSection } from "@/components/sections/IntegrationsSection";
 import { BlogSection } from "@/components/sections/BlogSection";
 import { FAQSection } from "@/components/sections/FAQSection";
@@ -33,9 +32,6 @@ export default function Home() {
         </AnimateOnScroll>
         <AnimateOnScroll delay={0.05}>
           <PricingSection />
-        </AnimateOnScroll>
-        <AnimateOnScroll delay={0.05}>
-          <BenefitsSection />
         </AnimateOnScroll>
         <AnimateOnScroll delay={0.05}>
           <IntegrationsSection />

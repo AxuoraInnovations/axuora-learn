@@ -35,6 +35,7 @@ const config: Config = {
       },
       fontFamily: {
         archivo: ["var(--font-archivo)", "system-ui", "sans-serif"],
+        script: ['"Great Vibes"', "cursive"],
       },
       maxWidth: {
         content: "1440px",

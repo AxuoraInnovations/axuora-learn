@@ -39,7 +39,8 @@ export function IntegrationsSection() {
           &quot;Time is Money, Use AxuoraLearn to Accelerate Your Learning.&quot;
         </motion.h2>
         <motion.p
-          className="font-script text-white max-w-xl mx-auto mb-8 text-xl md:text-2xl"
+          className="text-white max-w-xl mx-auto mb-8 text-xl md:text-2xl"
+          style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}

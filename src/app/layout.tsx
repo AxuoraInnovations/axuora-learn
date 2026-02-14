@@ -4,15 +4,32 @@ import { Header } from "@/components/Header";
 import { CTASection } from "@/components/sections/CTASection";
 import { Footer } from "@/components/Footer";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://axuoralearn.com";
+
 export const metadata: Metadata = {
-  title: "Axuora Learn – Speed Up Your Exam Preparation",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Axuora Learn – Speed Up Your Exam Preparation",
+    template: "%s | Axuora Learn",
+  },
   description:
     "Built by teens for teens. Generate AI predictive exam questions and use an advanced full-marks analyzer to prepare with confidence.",
   icons: {
-    icon: "/icon.png",
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
     apple: "/icon.png",
   },
   openGraph: {
+    type: "website",
+    title: "Axuora Learn – Speed Up Your Exam Preparation",
+    description:
+      "Built by teens for teens. Generate AI predictive exam questions and use an advanced full-marks analyzer to prepare with confidence.",
+    images: [{ url: "/icon.png", width: 512, height: 512, alt: "Axuora Learn" }],
+  },
+  twitter: {
+    card: "summary",
     title: "Axuora Learn – Speed Up Your Exam Preparation",
     description:
       "Built by teens for teens. Generate AI predictive exam questions and use an advanced full-marks analyzer to prepare with confidence.",

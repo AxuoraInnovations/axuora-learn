@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 
-const WAITLIST_GOOGLE_SCRIPT_URL = process.env.WAITLIST_GOOGLE_SCRIPT_URL;
+const WAITLIST_GOOGLE_SCRIPT_URL =
+  process.env.WAITLIST_GOOGLE_SCRIPT_URL ||
+  process.env.WAITLIST_SCRIPT_URL ||
+  process.env.WAITLIST_URL;
 
 // When a user joins the waitlist, this endpoint is called.
 // If WAITLIST_GOOGLE_SCRIPT_URL is set, we forward the email to your Google Apps Script,
@@ -35,7 +38,7 @@ export async function POST(request: Request) {
         }
       }
     } else {
-      console.warn("[waitlist] WAITLIST_GOOGLE_SCRIPT_URL is not set");
+      console.warn("[waitlist] No waitlist script URL env set");
     }
 
     return NextResponse.json({ ok: true });

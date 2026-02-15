@@ -49,7 +49,7 @@ This is done via a **Google Apps Script** web app. Your Next.js API forwards the
 
 ## 5. Configure Next.js
 
-Add this to your `.env.local` (and to your production env, e.g. Vercel):
+Add this to your `.env.local` **and** to your **Vercel** project (Settings → Environment Variables):
 
 ```bash
 WAITLIST_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
@@ -57,7 +57,8 @@ WAITLIST_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID
 
 Use the **exact** Web app URL you copied in step 3.
 
-Restart the dev server after changing env.
+- **Local:** Restart the dev server after changing env.
+- **Vercel:** If you don’t add this variable in Vercel, the live site will show **0** for “Join … others on the waitlist” and signups won’t be saved to the sheet. Add it for Production (and Preview if you want), then redeploy.
 
 ---
 
@@ -69,7 +70,8 @@ In the Apps Script, edit the **`getThankYouEmailBody`** function to change the s
 
 ## How it works
 
-1. User submits their email on the waitlist page.
+1. **Count on homepage:** Next.js `GET /api/waitlist-count` calls your Apps Script with a **GET** request. The script's `doGet()` returns `{ "count": N }` (number of signups). The "Join … others on the waitlist" number uses this. Add **`doGet`** to your script (see `waitlist-google-apps-script.js`) and set **`WAITLIST_GOOGLE_SCRIPT_URL` in Vercel**, or the live site will always show 0.
+2. **Signup:** User submits their email on the waitlist page.
 2. Next.js `POST /api/waitlist` receives it and, if `WAITLIST_GOOGLE_SCRIPT_URL` is set, sends a POST request to your Apps Script URL with `{ "email": "user@example.com" }`.
 3. The Apps Script:
    - Appends a new row to the sheet: `[email, timestamp]`.

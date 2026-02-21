@@ -1,70 +1,41 @@
 import { NextResponse } from "next/server";
 
-const DEFAULT_COUNT = 0;
+const WAITLIST_SCRIPT_URL =
+  process.env.WAITLIST_GOOGLE_SCRIPT_URL || process.env.WAITLIST_URL;
 
-export const dynamic = "force-dynamic";
-
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const debug = searchParams.get("debug") === "1";
-
-  const scriptUrl =
-    process.env.WAITLIST_GOOGLE_SCRIPT_URL ||
-    process.env.WAITLIST_SCRIPT_URL ||
-    process.env.WAITLIST_URL;
-
-  if (scriptUrl) {
-    try {
-      const res = await fetch(scriptUrl, { method: "GET", cache: "no-store" }).catch((err) => {
-        console.warn("[waitlist-count] Script fetch failed:", err);
-        return null;
-      });
-      if (res?.ok) {
-        const text = await res.text();
-        if (text.trim().startsWith("{")) {
-          const data = JSON.parse(text);
-          const count = typeof data?.count === "number" ? data.count : DEFAULT_COUNT;
-          const body: Record<string, unknown> = { count };
-          if (debug) body._hint = "ok";
-          const out = NextResponse.json(body);
-          out.headers.set("Cache-Control", "no-store, max-age=0");
-          return out;
-        }
-        console.warn("[waitlist-count] Script returned HTML, not JSON (check deployment: Who has access = Anyone)");
-        if (debug) {
-          return NextResponse.json({
-            count: DEFAULT_COUNT,
-            _hint: "script_not_json",
-            _preview: text.trim().slice(0, 120),
-          });
-        }
-      }
-      if (res && !res.ok) {
-        const text = await res.text();
-        console.warn("[waitlist-count] Script status", res.status, text.slice(0, 150));
-        if (debug) {
-          return NextResponse.json({ count: DEFAULT_COUNT, _hint: "script_error", _status: res.status });
-        }
-      }
-      if (res === null && debug) {
-        return NextResponse.json({ count: DEFAULT_COUNT, _hint: "script_fetch_failed" });
-      }
-    } catch (e) {
-      console.warn("[waitlist-count] Error:", e);
-      if (debug) {
-        return NextResponse.json({ count: DEFAULT_COUNT, _hint: "exception" });
-      }
-    }
-  } else {
-    if (debug) {
-      return NextResponse.json({ count: DEFAULT_COUNT, _hint: "url_not_set" });
-    }
+export async function GET() {
+  if (!WAITLIST_SCRIPT_URL) {
+    return NextResponse.json({ count: 0 });
   }
 
-  const count = Number(process.env.WAITLIST_COUNT) || DEFAULT_COUNT;
-  const body: Record<string, unknown> = { count };
-  if (debug) body._hint = "fallback";
-  const out = NextResponse.json(body);
-  out.headers.set("Cache-Control", "no-store, max-age=0");
-  return out;
+  try {
+    const base = WAITLIST_SCRIPT_URL.replace(/\/$/, "");
+    const url = base.endsWith("/exec") ? base : base + "/exec";
+    const res = await fetch(url, {
+      method: "GET",
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
+
+    const text = await res.text();
+    if (!res.ok) {
+      console.error("Waitlist count script error:", res.status, text);
+      return NextResponse.json({ count: 0 });
+    }
+
+    let data: { count?: number } = {};
+    try {
+      data = JSON.parse(text);
+    } catch {
+      const n = parseInt(text.trim(), 10);
+      if (!Number.isNaN(n) && n >= 0) return NextResponse.json({ count: n });
+      return NextResponse.json({ count: 0 });
+    }
+
+    const count = typeof data.count === "number" ? data.count : Number(data.count) || 0;
+    return NextResponse.json({ count });
+  } catch (e) {
+    console.error("Waitlist count API error:", e);
+    return NextResponse.json({ count: 0 });
+  }
 }

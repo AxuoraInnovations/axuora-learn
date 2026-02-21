@@ -56,7 +56,7 @@ export function IntegrationsSection() {
         >
           <Link
             href="/about"
-            className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity"
+            className="block w-full rounded-xl p-4 text-xl text-center font-medium transition-opacity hover:opacity-90 border border-blue-400 from-blue-500 to-blue-600 bg-gradient-to-t text-white shadow-lg shadow-blue-500 max-w-xs mx-auto"
           >
             Learn more
           </Link>

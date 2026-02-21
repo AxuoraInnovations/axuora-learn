@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import NumberFlow from "@number-flow/react";
 import { AnimatedGradientText } from "@/components/AnimatedGradientText";
 import Link from "next/link";
 
@@ -11,6 +10,8 @@ export default function WaitlistPage() {
   const [showIntro, setShowIntro] = useState(true);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [waitlistCount, setWaitlistCount] = useState(0);
+  const [targetCount, setTargetCount] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -21,6 +22,31 @@ export default function WaitlistPage() {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
+
+  useEffect(() => {
+    if (showIntro) return;
+    let cancelled = false;
+    fetch("/api/waitlist-count?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        const n = typeof data.count === "number" ? data.count : 0;
+        if (!cancelled) setTargetCount(n);
+      })
+      .catch(() => {
+        if (!cancelled) setTargetCount(0);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [showIntro]);
+
+  // Delay applying count so NumberFlow can animate from 0 to target
+  useEffect(() => {
+    if (!showIntro && targetCount !== null) {
+      const id = setTimeout(() => setWaitlistCount(targetCount), 120);
+      return () => clearTimeout(id);
+    }
+  }, [showIntro, targetCount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,9 +147,15 @@ export default function WaitlistPage() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.5 }}
-          className="relative min-h-screen w-full overflow-hidden bg-white"
+          className="relative min-h-screen w-full overflow-hidden bg-black"
         >
-          <div className="absolute inset-0 bg-white" />
+          <div className="absolute inset-0 bg-black" />
+          <div
+            className="absolute inset-x-0 bottom-0 h-[38%] min-h-[280px]"
+            style={{
+              background: "radial-gradient(ellipse 120% 100% at 50% 100%, #1e3a8a 0%, #2563eb 25%, #60a5fa 45%, #93c5fd 65%, transparent 85%)",
+            }}
+          />
 
           <div className="relative z-10 flex min-h-screen items-center justify-center px-4 waitlist-intro">
             <motion.div
@@ -147,7 +179,7 @@ export default function WaitlistPage() {
                   transition={{ delay: 0.1, duration: 0.6 }}
                   className="mb-8"
                 >
-                  <AnimatedGradientText>
+                  <AnimatedGradientText variant="grey">
                     Now open for early access
                   </AnimatedGradientText>
                 </motion.div>
@@ -171,7 +203,7 @@ export default function WaitlistPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.8 }}
-                  className="mt-8 text-lg text-slate-500"
+                  className="mt-8 text-lg text-white"
                 >
                   Click to continue
                 </motion.p>
@@ -185,48 +217,67 @@ export default function WaitlistPage() {
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="relative min-h-screen w-full overflow-hidden bg-white waitlist-form"
+          className="relative min-h-screen w-full overflow-hidden waitlist-form bg-black"
         >
-          <div className="absolute inset-0 bg-white" />
+          {/* Black top, glowing blue arc at bottom (match reference image) */}
+          <div className="absolute inset-0 bg-black" />
+          <div
+            className="absolute inset-x-0 bottom-0 h-[38%] min-h-[280px]"
+            style={{
+              background: "radial-gradient(ellipse 120% 100% at 50% 100%, #1e3a8a 0%, #2563eb 25%, #60a5fa 45%, #93c5fd 65%, transparent 85%)",
+            }}
+          />
 
           <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="w-full max-w-md text-center"
+              className="w-full max-w-lg text-center"
             >
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.8 }}
-                className="mb-8 text-xl text-slate-600 md:text-2xl"
-              >
-                Be the first to know when AxuoraLearn goes live.
-              </motion.p>
+              {/* Heading: single line, centered */}
+              <h1 className="text-5xl font-bold tracking-tight text-white md:text-6xl">
+                Study smarter with AxuoraLearn
+              </h1>
 
+              {/* Paragraph */}
+              <p className="mt-12 text-center text-lg text-slate-200 md:text-xl leading-relaxed">
+                Be the first to know when AxuoraLearn goes live.
+              </p>
+
+              {/* Form area — WaitlistHero layout & animations, light mode */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
-                className="relative"
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="relative mt-12 w-full max-w-md mx-auto h-[60px]"
               >
                 <canvas
                   ref={canvasRef}
                   className="pointer-events-none absolute left-1/2 top-1/2 z-50 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2"
                 />
 
+                {/* Success state: green pill, rings, checkmark, same animation as WaitlistHero */}
                 <div
-                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
+                  className={`absolute inset-0 flex items-center justify-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                     status === "success"
-                      ? "scale-100 opacity-100 animate-slide-up"
-                      : "pointer-events-none scale-95 opacity-0"
+                      ? "opacity-100 scale-100 animate-waitlist-success-pulse animate-waitlist-success-glow"
+                      : "opacity-0 scale-95 pointer-events-none"
                   }`}
+                  style={{ backgroundColor: "#10b981" }}
                 >
-                  <div className="flex items-center gap-2 text-lg font-semibold text-emerald-600">
-                    <div className="rounded-full bg-emerald-100 p-2">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {status === "success" && (
+                    <>
+                      <div className="absolute top-1/2 left-1/2 w-full h-full rounded-full border-2 border-emerald-400 animate-waitlist-ring" style={{ animationDelay: "0s" }} />
+                      <div className="absolute top-1/2 left-1/2 w-full h-full rounded-full border-2 border-emerald-300 animate-waitlist-ring" style={{ animationDelay: "0.15s" }} />
+                      <div className="absolute top-1/2 left-1/2 w-full h-full rounded-full border-2 border-emerald-200 animate-waitlist-ring" style={{ animationDelay: "0.3s" }} />
+                    </>
+                  )}
+                  <div className={`flex items-center gap-2 text-white font-semibold text-lg ${status === "success" ? "animate-waitlist-bounce-in" : ""}`}>
+                    <div className="bg-white/20 p-1 rounded-full">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
+                          className={status === "success" ? "animate-waitlist-checkmark" : ""}
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={3}
@@ -238,52 +289,57 @@ export default function WaitlistPage() {
                   </div>
                 </div>
 
+                {/* Form state: input full width, button absolute right (WaitlistHero layout), light mode */}
                 <form
                   onSubmit={handleSubmit}
-                  className={`relative flex gap-2 transition-all duration-500 ${
-                    status === "success" ? "pointer-events-none scale-95 opacity-0" : "scale-100 opacity-100"
+                  className={`relative w-full h-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                    status === "success" ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"
                   }`}
                 >
-                  <Input
+                  <input
                     type="email"
                     required
-                    placeholder="Enter your email"
+                    placeholder="name@email.com"
                     value={email}
                     disabled={status === "loading"}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-14 flex-1 rounded-xl border-2 border-slate-200 bg-white px-6 text-base text-black shadow-sm transition-all placeholder:text-slate-400 hover:border-slate-300 focus-visible:border-black focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="w-full h-[60px] pl-6 pr-[150px] rounded-full outline-none transition-all duration-200 border-2 border-slate-200 bg-white text-gray-900 placeholder:text-slate-500 focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-70 disabled:cursor-not-allowed"
                   />
-                  <Button
-                    type="submit"
-                    disabled={status === "loading"}
-                    className="h-14 rounded-xl bg-black px-8 text-base font-semibold text-white shadow-lg transition-all hover:bg-slate-800 hover:shadow-xl active:scale-95"
-                  >
-                    {status === "loading" ? (
-                      <svg
-                        className="h-5 w-5 animate-spin text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                    ) : (
-                      "Join"
-                    )}
-                  </Button>
+                  <div className="absolute top-[6px] right-[6px] bottom-[6px]">
+                    <button
+                      type="submit"
+                      disabled={status === "loading"}
+                      className="h-full px-6 rounded-full font-medium text-white transition-all active:scale-95 hover:brightness-110 disabled:hover:brightness-100 disabled:active:scale-100 disabled:cursor-wait flex items-center justify-center min-w-[130px] bg-primary hover:bg-primary/90"
+                    >
+                      {status === "loading" ? (
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                      ) : (
+                        "Join Waitlist"
+                      )}
+                    </button>
+                  </div>
                 </form>
+                <p className="mt-6 text-center text-slate-200 text-lg font-medium sm:text-xl md:text-2xl select-none">
+                  Join{" "}
+                  <span className="inline-flex items-baseline font-semibold tabular-nums text-blue-400 [&_number-flow-react]:pointer-events-none">
+                    <NumberFlow
+                      value={waitlistCount}
+                      format={{ useGrouping: true }}
+                      trend={1}
+                      transformTiming={{ duration: 800, easing: "ease-out" }}
+                      spinTiming={{ duration: 800, easing: "ease-out" }}
+                      opacityTiming={{ duration: 400, easing: "ease-out" }}
+                    />
+                  </span>{" "}
+                  others on the waitlist.
+                </p>
               </motion.div>
             </motion.div>
 
-            <Link
-              href="/"
-              className="mt-10 text-sm font-medium text-slate-500 transition-colors hover:text-slate-700"
-            >
+            <Link href="/" className="mt-20 text-sm font-medium text-white transition-colors hover:text-white/80">
               ← Back to home
             </Link>
           </div>

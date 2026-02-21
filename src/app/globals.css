@@ -18,17 +18,13 @@ body {
 
 /* Waitlist intro (avoids hydration mismatch from inline style content) */
 .waitlist-intro .intro-text {
-  background: linear-gradient(90deg, #000 0%, #000 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
   transition: all 0.3s ease;
 }
 .waitlist-intro .intro-container:hover .intro-text {
-  background: linear-gradient(90deg, #000 0%, #334155 50%, #000 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
 }
 .waitlist-intro .intro-container {
   position: relative;
@@ -37,7 +33,7 @@ body {
   content: "";
   position: absolute;
   inset: -20px;
-  background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,0,0,0.05), transparent);
+  background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08), transparent);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -71,6 +67,48 @@ body {
   animation: waitlist-shimmer 2s infinite;
 }
 
+/* WaitlistHero-style success & form animations */
+@keyframes waitlist-success-pulse {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes waitlist-success-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 0 60px rgba(16, 185, 129, 0.8), 0 0 100px rgba(16, 185, 129, 0.4); }
+}
+@keyframes waitlist-checkmark {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes waitlist-celebration-ring {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+@keyframes waitlist-bounce-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.waitlist-form .animate-waitlist-success-pulse {
+  animation: waitlist-success-pulse 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.waitlist-form .animate-waitlist-success-glow {
+  animation: waitlist-success-glow 2s ease-in-out infinite;
+}
+.waitlist-form .animate-waitlist-checkmark {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: waitlist-checkmark 0.4s ease-out 0.3s forwards;
+}
+.waitlist-form .animate-waitlist-ring {
+  animation: waitlist-celebration-ring 0.8s ease-out forwards;
+}
+.waitlist-form .animate-waitlist-bounce-in {
+  animation: waitlist-bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
 /* AnimatedGradientText gradient border animation */
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
@@ -78,4 +116,19 @@ body {
 }
 .animate-gradient {
   animation: gradient-shift 4s ease infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }

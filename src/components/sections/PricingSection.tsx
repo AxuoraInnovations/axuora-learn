@@ -40,16 +40,16 @@ const plans = [
     buttonVariant: "default" as const,
     popular: true,
     features: [
-      { text: "3x usage — AI predictive exam questions", icon: <FileQuestion size={20} /> },
-      { text: "3x usage — past papers & storage", icon: <BookOpen size={20} /> },
-      { text: "AI Live Lessons & performance tracker", icon: <BarChart3 size={20} /> },
+      { text: "Coming soon", icon: <FileQuestion size={20} /> },
+      { text: "Coming soon", icon: <BookOpen size={20} /> },
+      { text: "Coming soon", icon: <BarChart3 size={20} /> },
     ],
     includes: [
       "Everything in Starter, plus:",
       "All subjects supported",
       "AI Live Lessons",
       "Monthly progress reports",
-      "Priority support",
+      "Coming soon",
     ],
   },
   {

@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 
 const CONTACT_EMAIL = "axuorainnovations@gmail.com";
-const FORMSPREE_FORM_ID =
-  process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID || "mjgewyza";
-const FORMSPREE_URL = `https://formspree.io/f/${FORMSPREE_FORM_ID}`;
+const FORMSPREE_FORM_ID = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID;
+const FORMSPREE_URL = FORMSPREE_FORM_ID
+  ? `https://formspree.io/f/${FORMSPREE_FORM_ID}`
+  : null;
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");

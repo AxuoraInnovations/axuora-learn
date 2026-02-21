@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
-import { Button } from "@/components/ui/button";
+import { ArrowUpRight } from "lucide-react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -117,9 +117,9 @@ function MobileMenu({ open, mounted, onClose, links }: MobileMenuProps) {
                 </motion.div>
               ))}
             </nav>
-            {/* CTA: Join the Waitlist */}
+            {/* Waitlist CTA */}
             <motion.div
-              className="shrink-0 flex justify-center border-t border-white/15 px-5 py-4 md:px-6 md:py-5"
+              className="shrink-0 flex flex-col items-center gap-3 border-t border-white/15 px-5 py-4 md:px-6 md:py-5"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
@@ -128,12 +128,10 @@ function MobileMenu({ open, mounted, onClose, links }: MobileMenuProps) {
               <Link
                 href="/waitlist"
                 onClick={onClose}
-                className="inline-flex w-[min(90%,280px)] min-w-[200px] items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white hover:bg-gray-900 transition-colors md:text-base md:py-3.5"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-black px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-black/90"
               >
                 Join the Waitlist
-                <svg className="size-4 shrink-0 md:size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7v10M17 7H7" />
-                </svg>
+                <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
               </Link>
             </motion.div>
           </motion.div>
@@ -151,7 +149,7 @@ export function Header() {
   const scrolled = useScroll(10);
 
   // Landing-style nav (transparent/white text, then blue when scrolled) on: home, about, features, pricing, contact, blogs list, blog post pages, waitlist
-  const blendedNavPaths = ["/", "/about", "/features", "/pricing", "/contact", "/blogs", "/waitlist"];
+  const blendedNavPaths = ["/", "/about", "/features", "/pricing", "/contact", "/blogs", "/waitlist", "/sign-in", "/sign-up", "/onboarding", "/dashboard"];
   const isBlendedNav =
     blendedNavPaths.includes(pathname) || (pathname?.startsWith("/blogs/") ?? false);
   const isBlendedNavIntro = isBlendedNav && !scrolled;
@@ -230,34 +228,13 @@ export function Header() {
             ))}
           </div>
         </div>
-        <div className="hidden items-center gap-3 shrink-0 lg:flex">
-          <Link
-            href="/waitlist"
-            className={
-              isBlendedNav
-                ? "inline-flex h-10 items-center justify-center rounded-md border-2 border-white bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-white/20"
-                : "inline-flex h-10 items-center justify-center rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-            }
-          >
-            Sign In
-          </Link>
-          <Button
-            asChild
-            size="lg"
-            variant="default"
-            className={cn(
-              "gap-1.5",
-              isBlendedNav && "!bg-black hover:!bg-gray-800 !text-white !shadow-[0_1px_2px_rgba(0,0,0,0.05)]"
-            )}
-          >
-            <Link href="/waitlist">
-              Join the Waitlist
-              <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7v10M17 7H7" />
-              </svg>
-            </Link>
-          </Button>
-        </div>
+        <Link
+          href="/waitlist"
+          className="hidden lg:inline-flex items-center justify-center gap-2 rounded-xl bg-black px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-black/90"
+        >
+          Join the Waitlist
+          <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
+        </Link>
         <button
           type="button"
           onClick={() => setOpen(!open)}
